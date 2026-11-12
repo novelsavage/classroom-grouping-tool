@@ -8,7 +8,7 @@ UNIPA（Universal Passport）の標準出席CSVに対応した、授業のグル
 
 ## 使い方
 
-1. [index.htmlをダウンロード](https://raw.githubusercontent.com/novelsavage/classroom-grouping-tool/main/index.html)してブラウザで開きます。リンク先でソースが表示された場合は、`Ctrl+S` で `index.html` として保存してください。
+1. [GitHub Pagesでツールを開きます](https://novelsavage.github.io/classroom-grouping-tool/)。オフラインで使う場合は [index.html](https://raw.githubusercontent.com/novelsavage/classroom-grouping-tool/main/index.html) を保存してブラウザで開きます。
 2. UNIPAから出力した出席CSVを読み込み、対象日を選びます。既定では出席・遅刻・早退の学生が対象です。公欠を含めたり、一覧のチェックで個別に調整したりできます。
 3. 授業の設定を選び、実際の教室に合わせて机の列数と行数を指定します。「優先する組の人数」と「所属による分散」は個別に変更できます。
 4. 「グループを生成」を押します。結果は全画面で投影でき、組番号と机の行・列・席番号をCSVに保存できます。
@@ -38,4 +38,4 @@ UNIPA（Universal Passport）の標準出席CSVに対応した、授業のグル
 1002,サンプル02,その他
 ```
 
-名簿の追加・更新はブラウザに保存されます。別のPCへ移す場合は「マスターCSVを保存」を使ってください。
+GitHub Pages版の名簿はページ内だけで保持し、再読み込みすると消えます。次回も使う場合は「マスターCSVを保存」から書き出し、使うときに読み込んでください。ダウンロードしたHTMLを直接開いた場合は、名簿の追加・更新をブラウザに保存します。
