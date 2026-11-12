@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>授業内グループ分け</title>
+<style>
+:root{--bg:#f5f4ef;--paper:#fff;--ink:#172329;--muted:#5b686b;--line:#bcc8c7;--accent:#006c70;--light:#e2f0ee;--warn:#a14320;--ok:#236145}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,'Yu Gothic',sans-serif;line-height:1.5}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:white;padding:.55rem .9rem}button.secondary{color:var(--accent);background:transparent}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #e79b35;outline-offset:2px}input,select{border:1px solid #829492;background:white;color:var(--ink);padding:.5rem;min-height:42px}input[type=checkbox]{min-height:auto}input[type=file]{max-width:100%;height:auto}header{background:#12333a;color:white;padding:1.2rem max(1rem,calc((100vw - 1160px)/2))}header h1{font-size:1.55rem;margin:.15rem 0}header p{margin:0;color:#cbdcda}.eyebrow{letter-spacing:.12em;font-size:.72rem;font-weight:700}main{max-width:1160px;margin:auto;padding:1.3rem 1rem 4rem}.workflow{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.panel{background:var(--paper);border:1px solid var(--line);padding:1.15rem;margin-bottom:1.2rem}.panel h2{font-size:1.14rem;margin:0 0 1rem;border-bottom:2px solid var(--ink);padding-bottom:.55rem}.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:end}.field{display:flex;flex-direction:column;gap:.25rem;min-width:130px}.field.wide{flex:1}.field label,.label{font-size:.81rem;font-weight:700}small,.subtle{color:var(--muted)}.status{min-height:1.5rem;margin:.7rem 0 0}.error{color:var(--warn)}.ok{color:var(--ok)}.counts{display:flex;flex-wrap:wrap;gap:0;margin:.8rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.counts span{padding:.6rem 1rem .6rem 0;margin-right:1rem}.counts strong{font-size:1.25rem;font-variant-numeric:tabular-nums}.checkline{display:flex;gap:.5rem;align-items:center;margin:.7rem 0}.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}.notice{background:#fff1e6;border-left:4px solid var(--warn);padding:.6rem .8rem;margin:.7rem 0}.roster{max-height:340px;overflow:auto;border:1px solid var(--line)}table{border-collapse:collapse;width:100%;font-size:.88rem}th,td{border-bottom:1px solid #dbe1df;text-align:left;padding:.48rem .55rem}th{background:#e9eeeb;position:sticky;top:0}td.id{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem}.group{border:1px solid var(--line);background:white}.group h3{margin:0;padding:.6rem .8rem;background:#dfe9e6;display:flex;justify-content:space-between;font-size:.96rem}.group ul{list-style:none;margin:0;padding:0}.group li{border-top:1px solid #e2e7e5;padding:.48rem .7rem;display:flex;align-items:center;gap:.4rem}.group li .person{flex:1;min-width:0}.group li small{display:block}.group li select{max-width:82px;min-height:34px;padding:.2rem}.tag{color:var(--accent);font-weight:700;font-size:.75rem}.topline{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}.dice{position:fixed;inset:0;background:rgba(12,30,34,.87);color:white;display:flex;justify-content:center;align-items:center;z-index:10;flex-direction:column;gap:.5rem}.dice[hidden]{display:none}.dice .face{font-size:6rem;line-height:1;animation:shake .6s infinite alternate}.dice p{letter-spacing:.12em}@keyframes shake{from{transform:translate(-8px,-5px) rotate(-10deg)}to{transform:translate(8px,5px) rotate(10deg)}}@media(prefers-reduced-motion:reduce){.dice .face{animation:none}}@media(max-width:760px){.workflow{grid-template-columns:1fr}.panel{padding:.85rem}.row>*{flex:1}header{padding:1rem}}
+.masterOnly{border-top:1px solid var(--line);margin-top:.7rem;padding-top:.7rem}.masterOnly h3{font-size:.9rem;margin:.1rem 0 .4rem}.masterOnlyList{max-height:180px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.15rem .6rem}.masterOnlyList label{display:flex;align-items:center;gap:.35rem;padding:.25rem;font-size:.85rem}.masterOnlyList small{font-family:ui-monospace,monospace}.presentation{position:fixed;inset:0;z-index:20;background:#f5f4ef;color:var(--ink);padding:clamp(8px,1.2vw,22px);display:flex;flex-direction:column;gap:10px}.presentation[hidden]{display:none}.presentationHead{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px}.presentationHead strong{font-size:clamp(13px,1.2vw,22px);letter-spacing:.08em}.presentationGrid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--preview-cols,4),minmax(0,1fr));grid-template-rows:repeat(var(--preview-rows,3),minmax(0,1fr));gap:clamp(4px,.55vw,12px)}.presentationGroup{min-width:0;min-height:0;border:2px solid #8da8a5;background:white;display:flex;flex-direction:column}.presentationGroup h3{margin:0;padding:.25em .45em;background:#dfe9e6;font-size:clamp(11px,1.2vw,20px);display:flex;justify-content:space-between}.presentationGroup ol{list-style:none;margin:0;padding:.2em .45em;display:flex;flex-direction:column;justify-content:space-evenly;flex:1;min-height:0}.presentationGroup li{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(11px,1.35vw,23px);font-weight:650;line-height:1.18}.presentationGroup li small{font-size:.65em;font-weight:400;margin-left:.3em}@media(max-width:760px){.presentationGrid{overflow:auto;grid-template-rows:none;grid-auto-rows:minmax(120px,1fr)}.presentationGroup li{font-size:12px}.presentationHead{flex-wrap:wrap}}
+.classroomFront{text-align:center;background:#12333a;color:white;padding:.45rem;margin:.4rem 0 .8rem;font-weight:700}.deskPart{font-size:.72em;font-weight:500;margin-left:.3em}.group .deskNote{margin:.2rem .7rem;color:var(--muted);font-size:.78rem}.presentationGroup .deskNote{margin:.15rem .4rem;color:var(--muted);font-size:.75em}
+.classroomScroll{overflow:auto}.groups{grid-template-columns:repeat(var(--classroom-cols,6),minmax(180px,1fr));gap:1rem}.group.empty,.presentationGroup.empty{background:#edf0eb;border-style:dashed;color:var(--muted)}.empty p{text-align:center;margin:auto;padding:1rem}.presentationGrid{overflow:auto;grid-template-rows:repeat(var(--preview-rows,5),minmax(95px,1fr))}.presentationGroup li{white-space:normal;overflow:visible;font-size:clamp(11px,1.15vw,21px)}.presentationGroup ol{gap:.15em}.presentationGroup{overflow:auto}
+.group.gapRow,.presentationGroup.gapRow{grid-column:1/-1;min-height:95px;border:0;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.85rem;letter-spacing:.08em}
+.group[data-group],.presentationGroup[data-group]{border-color:hsl(var(--group-hue) 48% 40%);border-left-width:6px;background:hsl(var(--group-hue) 60% 97%)}
+.group[data-group] h3,.presentationGroup[data-group] h3{background:hsl(var(--group-hue) 65% 84%);color:var(--ink)}
+@media(max-width:760px){.presentationGrid{grid-template-rows:repeat(var(--preview-rows,4),minmax(120px,1fr));grid-auto-rows:auto}}
+</style>
+</head>
+<body>
+<header><div class="eyebrow">CLASSROOM GROUPING</div><h1>授業内グループ分け</h1><p>出席CSVを読み込み、指定した条件でランダムに組み分けます。処理はこのブラウザ内で完結します。</p></header>
+<main>
+<div class="workflow">
+<section class="panel"><h2>01　出席データ</h2><div class="field"><label for="attendanceFile">週ごとの出席CSV</label><input id="attendanceFile" type="file" accept=".csv,text/csv"></div><div class="row" style="margin-top:.8rem"><div class="field wide"><label for="dateSelect">対象日</label><select id="dateSelect" disabled><option>CSVを読み込んでください</option></select></div></div><div id="attendanceStatus" class="status" role="status"></div><div id="counts" class="counts"></div><div id="issues"></div><div id="masterOnly"></div></section>
+<section class="panel"><h2>02　組み分け条件</h2><div class="row"><div class="field"><label for="groupPreset">授業の設定</label><select id="groupPreset"><option value="programming">プログラミング基礎</option><option value="dv">Data Visualization</option><option value="custom">カスタム</option></select></div>
+<div class="field"><label for="groupSize">優先する組の人数</label><select id="groupSize"><option value="2">2人</option><option value="3" selected>3人</option><option value="4">4人</option></select></div>
+<div class="field"><label for="balanceMode">所属による分散</label><select id="balanceMode"><option value="off">なし</option><option value="engineering">工学部を分散</option></select></div><div class="field"><span class="label">予定グループ数</span><strong id="plannedGroups">—</strong></div><div class="field wide"><label for="attendanceMode">対象者</label><select id="attendanceMode"><option value="present">出・遅・早のみ</option><option value="nonabsent">出・遅・早・公欠</option><option value="all">マスター全員</option></select></div></div><div class="row" style="margin-top:.8rem"><div class="field"><label for="tableColumns">机の横の列数</label><input id="tableColumns" type="number" min="1" max="10" step="1" value="6"></div><div class="field"><label for="tableRows">机の前後の行数</label><input id="tableRows" type="number" min="1" max="20" step="1" value="6"></div></div><p id="layoutStatus" class="status" role="status"></p><label class="checkline"><input id="diceToggle" type="checkbox" checked> 約2.5秒のダイス演出を表示</label><p class="subtle"><span id="groupingHelp"></span></p></section>
+</div>
+<section class="panel"><div class="topline"><h2>03　学生マスター <span id="masterCount"></span></h2><button id="exportMaster" class="secondary">マスターCSVを保存</button></div><p class="subtle">追加・修正はこのブラウザに保存されます。別のPCへ移す場合はCSVを保存し、下から読み込んでください。</p><div class="field" style="margin-bottom:.8rem"><label for="masterFile">保存したマスターCSVを読み込む</label><input id="masterFile" type="file" accept=".csv,text/csv"></div><form id="studentForm" class="row"><div class="field"><label for="studentId">学籍番号</label><input id="studentId" required inputmode="numeric" autocomplete="off"></div><div class="field"><label for="studentName">氏名</label><input id="studentName" required autocomplete="off"></div><div class="field wide"><label for="studentDept">所属（任意）</label><input id="studentDept" placeholder="不明なら空欄で登録できます"></div><button type="submit">追加・更新</button><button id="clearForm" type="button" class="secondary">入力を消す</button></form><div id="masterStatus" class="status" role="status"></div><details><summary>学生一覧・修正</summary><div class="roster"><table><thead><tr><th>学籍番号</th><th>氏名</th><th>所属</th><th>操作</th></tr></thead><tbody id="masterRows"></tbody></table></div></details></section>
+<section class="panel" id="generatePanel"><h2>04　実行・保存</h2><p class="subtle">対象者を確認してから生成してください。教室の前方から順に配置します。</p><div class="actions"><button id="generate" disabled>グループを生成</button><button id="exportGroups" class="secondary" disabled>結果CSVを保存</button></div><div id="generateStatus" class="status" role="status"></div></section><section class="panel" id="resultsPanel"><div class="topline"><h2>05　組み分け結果</h2><div class="row"><span id="resultSummary" class="subtle">まだ生成されていません</span><button id="previewButton" class="secondary" disabled>全画面プレビュー</button></div></div><div class="classroomFront">黒板・スクリーン（教室の前方）</div><div class="classroomScroll"><div id="groups" class="groups"></div></div></section>
+</main><div id="dice" class="dice" hidden aria-live="off"><div id="dieFace" class="face">⚄</div><p>グループを組み分けています…</p></div>
+<div id="presentation" class="presentation" hidden role="dialog" aria-label="グループ分け全画面プレビュー"><div class="presentationHead"><strong>授業内グループ分け</strong><span id="presentationSummary"></span><button id="closePreview" type="button">閉じる ×</button></div><div class="classroomFront">黒板・スクリーン（教室の前方）</div><div id="presentationGrid" class="presentationGrid"></div></div>
+<script id="seed" type="application/json">[]</script>
+<script>
+(()=>{'use strict';
+const seed=JSON.parse(document.getElementById('seed').textContent),KEY='classroom-grouping-master-v1';
+const $=id=>document.getElementById(id);let overrides={},attendance=[],date='',groups=[],generating=false,attendanceOverrides=new Map();
+try{overrides=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch{overrides={}}
+const master=()=>{const map=new Map(seed.map(s=>[s.id,s]));for(const [id,s] of Object.entries(overrides))map.set(id,s);return [...map.values()].sort((a,b)=>a.id.localeCompare(b.id))};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(overrides));return true}catch{return false}};
+const dept=s=>s.dept||'所属不明',engineering=s=>/^工学部(?:\s|$)/.test(dept(s));
+function csvParse(t){t=t.replace(/^\uFEFF/,'');let rows=[],row=[],field='',quoted=false;for(let i=0;i<t.length;i++){let c=t[i];if(quoted){if(c==='"'&&t[i+1]==='"'){field+='"';i++}else if(c==='"')quoted=false;else field+=c}else if(c==='"'&&field==='')quoted=true;else if(c===','){row.push(field);field=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(field);if(row.some(x=>x!==''))rows.push(row);row=[];field=''}else field+=c}if(quoted)throw Error('CSVの引用符が閉じていません');row.push(field);if(row.some(x=>x!==''))rows.push(row);return rows}
+function csvDownload(rows,name){const body=rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\uFEFF',body],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+const setStatus=(id,msg,kind='')=>{$(id).textContent=msg;$(id).className='status '+kind};
+function renderMaster(){const m=master();$('masterCount').textContent=`（${m.length}人）`;const body=$('masterRows');body.replaceChildren();for(const s of m){const tr=document.createElement('tr');for(const v of [s.id,s.name,dept(s)]){const td=document.createElement('td');td.textContent=v;tr.append(td)}const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='secondary';b.textContent='修正';b.addEventListener('click',()=>{$('studentId').value=s.id;$('studentName').value=s.name;$('studentDept').value=s.dept||'';$('studentName').focus()});td.append(b);tr.append(td);body.append(tr)}renderAttendance()}
+function classroomSettings(){
+ const cols=Number($('tableColumns').value),rows=Number($('tableRows').value);
+ if(!Number.isInteger(cols)||cols<1||cols>10||!Number.isInteger(rows)||rows<1||rows>20)throw Error('横は1〜10列、前後は1〜20行の整数で設定してください。');
+ return {cols,rows,desks:cols*rows,pairs:cols*Math.floor(rows/2)}
+}
+const preferredSize=()=>Number($('groupSize').value);
+const balanceEngineering=()=>$('balanceMode').value==='engineering';
+
+function groupPlan(n){
+ if(!n)return [];
+ const {desks,pairs}=classroomSettings();
+ const preferred=preferredSize();
+ if(preferred===2){
+  if(Math.ceil(n/2)>desks)return null;
+  return [...Array(Math.floor(n/2)).fill(2),...Array(n%2).fill(1)];
+ }
+ if(preferred===3){
+  if(n===1||Math.ceil(n/3)>desks)return null;
+  const twos=[0,2,1][n%3];
+  return [...Array((n-2*twos)/3).fill(3),...Array(twos).fill(2)];
+ }
+ // 1人組を避けた上で4人組を最大化する。机不足なら3人組を増やす。
+ for(const soloAllowed of [false,true])for(let fours=Math.min(Math.floor(n/4),pairs);fours>=0;fours--){
+  const rest=n-4*fours;
+  for(let threes=Math.floor(rest/3);threes>=0;threes--)for(let twos=Math.floor((rest-3*threes)/2);twos>=0;twos--){
+   const ones=rest-3*threes-2*twos;
+   if(ones<0||ones>(soloAllowed?1:0)||2*fours+threes+twos+ones>desks)continue;
+   return [...Array(fours).fill(4),...Array(threes).fill(3),...Array(twos).fill(2),...Array(ones).fill(1)]
+  }
+ }
+ return null
+}
+function plannedGroupCount(n){try{return groupPlan(n)?.length||0}catch{return 0}}
+function checkLayout(){
+ try{
+  const {cols,rows,desks}=classroomSettings(),n=selected().length,plan=groupPlan(n),enough=!!plan;
+  $('plannedGroups').textContent=n&&plan?`${plan.length}組（${n}人）`:'—';$('generate').disabled=generating||!n||!enough;
+  const used=plan?plan.reduce((sum,size)=>sum+(size===4?2:1),0):0;
+  const breakdown=plan?[4,3,2,1].map(size=>[size,plan.filter(x=>x===size).length]).filter(([,count])=>count).map(([size,count])=>`${size}人組 ${count}`).join('・'):'';
+  const summary=!enough
+   ? (n===1&&preferredSize()===3?'組み分けには2人以上必要です。':`${cols}列 × ${rows}行＝${desks}卓では${n}人を配置できません。机の列数か行数を増やしてください。`)
+   : `${cols}列 × ${rows}行＝${desks}卓。${n?`${n}人を${breakdown}に分け、${used}卓を使用します。`:''}`;
+  setStatus('layoutStatus',summary,enough?'':'error');
+  return enough
+ }catch(err){$('generate').disabled=true;setStatus('layoutStatus',err.message,'error');return false}
+}
+function attendancePerson(row,map){return map.get(row.id)||{id:row.id,name:(row.name||'').trim()||row.id,dept:''}}
+function isIncluded(row,mode){if(attendanceOverrides.has(row.id))return attendanceOverrides.get(row.id);const accepted=mode==='present'?['出','遅','早']:['出','遅','早','公'];return accepted.some(x=>(row.status||'').startsWith(x))}
+function selected(){const m=master(),map=new Map(m.map(s=>[s.id,s])),mode=$('attendanceMode').value;if(mode==='all')return m;if(!date)return [];const people=attendance.filter(r=>isIncluded(r,mode)).map(r=>attendancePerson(r,map));const ids=new Set(attendance.map(r=>r.id));for(const s of m)if(!ids.has(s.id)&&attendanceOverrides.get(s.id)===true)people.push(s);return people}
+function renderAttendance(){try{renderAttendanceDetails()}finally{checkLayout()}}
+function updateSelectionStatus(){
+ const n=selected().length;
+ setStatus('attendanceStatus',`${date}：${attendance.length}人分。組み分け対象 ${n}人。${n===0?'対象日、出席状態、下の対象者チェックを確認してください。':''}`,n===0?'error':'ok');
+ checkLayout()
+}
+function renderAttendanceDetails(){
+ const box=$('counts'),issues=$('issues'),onlyBox=$('masterOnly');box.replaceChildren();issues.replaceChildren();onlyBox.replaceChildren();
+ const m=master(),map=new Map(m.map(s=>[s.id,s])),mode=$('attendanceMode').value;
+ const counts={出:0,遅:0,早:0,欠:0,公:0,空欄:0,その他:0};
+ for(const r of attendance){const v=r.status||'',key=!v?'空欄':Object.keys(counts).find(k=>k!=='空欄'&&k!=='その他'&&v.startsWith(k))||'その他';counts[key]++}
+ for(const [k,n] of Object.entries(counts)){const span=document.createElement('span');span.innerHTML=`${k} <strong>${n}</strong>`;box.append(span)}
+ if(!attendance.length){box.replaceChildren();const n=selected().length;$('generate').disabled=n===0;$('plannedGroups').textContent=n?`${plannedGroupCount(n)}組（${n}人）`:'—';setStatus('attendanceStatus',n?`マスター全員 ${n}人を対象にできます。出席状況で絞る場合はCSVを読み込んでください。`:'出席CSVを読み込んでください。');return}
+ const missing=attendance.filter(r=>!map.has(r.id));
+ if(balanceEngineering()&&missing.length){const p=document.createElement('p');p.className='notice';p.textContent=`学生マスター未登録：${missing.length}人。出席CSVの氏名を使い、学部不明と表示し、工学部の分散対象には数えず、出席状況に応じて組み分けます。氏名も空欄なら学籍番号で表示します。`;issues.append(p)}
+ const wrap=document.createElement('div');wrap.className='masterOnly';
+ const title=document.createElement('h3');title.textContent='組み分け対象者の確認・変更';
+ const note=document.createElement('p');note.className='subtle';note.textContent='チェックした学生を含めます。出席欄が空欄・欠席・不明の学生、CSVにいない学生は、出席を確認してチェックしてください。対象日・対象者条件を変えると手動の選択はリセットされます。';
+ const list=document.createElement('div');list.className='masterOnlyList';
+ const rows=[...attendance.map(r=>({...attendancePerson(r,map),status:r.status||'空欄',included:isIncluded(r,mode)})),...m.filter(s=>!attendance.some(r=>r.id===s.id)).map(s=>({...s,status:'CSVに記録なし',included:attendanceOverrides.get(s.id)===true}))];
+ for(const student of rows){const label=document.createElement('label'),input=document.createElement('input'),name=document.createElement('span'),id=document.createElement('small');input.type='checkbox';input.checked=mode==='all'?map.has(student.id):student.included;input.disabled=mode==='all';input.addEventListener('change',()=>{attendanceOverrides.set(student.id,input.checked);groups=[];renderGroups();updateSelectionStatus()});name.textContent=`${student.name}（${student.status}）`;id.textContent=student.id;label.append(input,name,id);list.append(label)}
+ wrap.append(title,note,list);onlyBox.append(wrap);
+ const n=selected().length;$('generate').disabled=n===0;$('plannedGroups').textContent=n?`${plannedGroupCount(n)}組（${n}人）`:'—';setStatus('attendanceStatus',`${date}：${attendance.length}人分。組み分け対象 ${n}人。${n===0?'対象日、出席状態、下の対象者チェックを確認してください。':''}`,n===0?'error':'ok')
+}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function arrange(people,sizes){
+ if(!balanceEngineering()){
+  const shuffled=shuffle(people);
+  let offset=0;
+  return sizes.map(size=>{
+   const group=shuffled.slice(offset,offset+size);
+   offset+=size;
+   return group;
+  });
+ }
+ const n=sizes.length,bins=Array.from({length:n},()=>[]),capacity=sizes;
+ const eng=shuffle(people.filter(engineering)),other=shuffle(people.filter(s=>!engineering(s)));
+ function place(list){for(const s of list){const choices=bins.map((b,i)=>({i,b,eng:b.filter(engineering).length,major:b.filter(x=>x.dept===s.dept).length})).filter(x=>x.b.length<capacity[x.i]);choices.sort((a,b)=>engineering(s)?a.eng-b.eng||a.major-b.major||a.b.length-b.b.length:a.b.length-b.b.length||a.major-b.major);const best=choices.filter(x=>engineering(s)?x.eng===choices[0].eng&&x.major===choices[0].major&&x.b.length===choices[0].b.length:x.b.length===choices[0].b.length&&x.major===choices[0].major);bins[shuffle(best)[0].i].push(s)}}
+ place(eng);place(other);return bins
+}
+function deskLayout(){
+ const {cols,rows,desks}=classroomSettings(),layout=Array(desks).fill(null),pairs=[];
+ const fours=groups.filter(group=>group.length===4).length,singles=groups.length-fours,blocks=Math.ceil(fours/cols);
+ let placement=null;
+ // 前後2卓のブロック間に、全員が収まる範囲で机1行分の間隔を入れる。
+ for(let mask=0;mask<2**Math.max(0,blocks-1);mask++){
+  const starts=blocks?[0]:[],gaps=[];
+  for(let block=1;block<blocks;block++){
+   const gap=(mask>>(block-1))&1,next=starts[block-1]+2+gap;
+   if(gap)gaps.push(next-1);
+   starts.push(next)
+  }
+  if(blocks&&starts.at(-1)+1>=rows)continue;
+  if(2*fours+singles+cols*gaps.length>desks)continue;
+  if(!placement||gaps.length>placement.gaps.length)placement={starts,gaps}
+ }
+ if(!placement)throw Error('机が足りません');
+ for(const row of placement.gaps)for(let col=0;col<cols;col++)layout[row*cols+col]={gap:true};
+ for(const row of placement.starts)for(let col=0;col<cols;col++)pairs.push([row*cols+col,(row+1)*cols+col]);
+ let pairIndex=0;
+ groups.forEach((group,groupIndex)=>{if(group.length!==4)return;const pair=pairs[pairIndex++];if(!pair)throw Error('4人組を置く前後の机が足りません');layout[pair[0]]={groupIndex,part:'前卓',members:group.slice(0,2)};layout[pair[1]]={groupIndex,part:'後卓',members:group.slice(2)}});
+ let deskIndex=0;
+ groups.forEach((group,groupIndex)=>{if(group.length===4)return;while(deskIndex<desks&&layout[deskIndex])deskIndex++;if(deskIndex===desks)throw Error('机が足りません');layout[deskIndex]={groupIndex,part:'1卓',members:group};deskIndex++});
+ return layout
+}
+function canMove(from,to){
+ if(from===to)return true;
+ const preferred=preferredSize();
+ if(preferred===3)return groups[from].length===3&&groups[to].length===2;
+ if(groups[from].length<=1||groups[to].length>=preferred)return false;
+ const {desks,pairs}=classroomSettings(),sizes=groups.map(group=>group.length);sizes[from]--;sizes[to]++;
+ return sizes.filter(size=>size===4).length<=pairs&&sizes.reduce((sum,size)=>sum+(size===4?2:1),0)<=desks
+}
+function colorGroup(element,index){element.dataset.group=String(index+1);element.style.setProperty('--group-hue',Math.round((210+index*137.508)%360))}
+function renderGroups(){
+ const box=$('groups');box.replaceChildren();box.style.setProperty('--classroom-cols',$('tableColumns').value);$('exportGroups').disabled=!groups.length;$('previewButton').disabled=!groups.length;
+ if(!groups.length){$('presentation').hidden=true;$('resultSummary').textContent='まだ生成されていません';return}
+ const total=groups.reduce((sum,g)=>sum+g.length,0);$('resultSummary').textContent=`${groups.length}組・${total}人`;
+ const {cols}=classroomSettings();deskLayout().forEach((entry,deskIndex)=>{
+  if(entry?.gap){if(deskIndex%cols===0){const gap=document.createElement('div');gap.className='group gapRow';gap.textContent='前後の間隔（机1行分）';box.append(gap)}return}
+  const sec=document.createElement('section');sec.className='group';
+  if(!entry){sec.classList.add('empty');const h=document.createElement('h3');h.textContent=`机 ${deskIndex+1}`;const p=document.createElement('p');p.textContent='空き';sec.append(h,p);box.append(sec);return}
+   const {groupIndex,part,members}=entry,group=groups[groupIndex],h=document.createElement('h3'),title=document.createElement('span'),meta=document.createElement('span');colorGroup(sec,groupIndex);
+  title.textContent=`GROUP ${String(groupIndex+1).padStart(2,'0')} / ${part}`;meta.textContent=balanceEngineering()?`工学部 ${group.filter(engineering).length}/${group.length}`:`${group.length}人組`;h.append(title,meta);sec.append(h);
+  const ul=document.createElement('ul');members.forEach(student=>{const li=document.createElement('li'),p=document.createElement('div');p.className='person';const name=document.createElement('span');name.textContent=student.name+'　';p.append(name);if(balanceEngineering()&&engineering(student)){const tag=document.createElement('span');tag.className='tag';tag.textContent='工学部';p.append(tag)}else if(balanceEngineering()&&!student.dept){const tag=document.createElement('span');tag.className='tag';tag.textContent='学部不明';p.append(tag)}const detail=document.createElement('small');detail.textContent=`${student.id}${balanceEngineering()?'｜'+dept(student):''}`;p.append(detail);const sel=document.createElement('select');sel.setAttribute('aria-label',`${student.name}の移動先`);groups.forEach((_,j)=>{const option=document.createElement('option');option.value=j;option.textContent=`組 ${j+1}`;option.selected=j===groupIndex;option.disabled=!canMove(groupIndex,j);sel.append(option)});sel.addEventListener('change',()=>{const target=Number(sel.value);if(!canMove(groupIndex,target))return;groups[groupIndex]=groups[groupIndex].filter(x=>x.id!==student.id);groups[target].push(student);renderGroups()});li.append(p,sel);ul.append(li)});sec.append(ul);box.append(sec)
+ });if(!$('presentation').hidden)renderPresentation()
+}
+function renderPresentation(){
+ const grid=$('presentationGrid');grid.replaceChildren();if(!groups.length)return;
+ const {cols,rows}=classroomSettings();grid.style.setProperty('--preview-cols',cols);grid.style.setProperty('--preview-rows',rows);$('presentationSummary').textContent=`${groups.length}組 / ${groups.reduce((sum,g)=>sum+g.length,0)}人`;
+ deskLayout().forEach((entry,deskIndex)=>{
+  if(entry?.gap){if(deskIndex%cols===0){const gap=document.createElement('div');gap.className='presentationGroup gapRow';gap.textContent='前後の間隔（机1行分）';grid.append(gap)}return}
+  const card=document.createElement('section');card.className='presentationGroup';const head=document.createElement('h3');
+  if(!entry){card.classList.add('empty');head.textContent=`机 ${deskIndex+1}`;const note=document.createElement('p');note.textContent='空き';card.append(head,note);grid.append(card);return}
+   colorGroup(card,entry.groupIndex);const title=document.createElement('span'),meta=document.createElement('span');title.textContent=`GROUP ${String(entry.groupIndex+1).padStart(2,'0')} / ${entry.part}`;meta.textContent=`${groups[entry.groupIndex].length}人組`;head.append(title,meta);
+  const list=document.createElement('ol');entry.members.forEach(student=>{const item=document.createElement('li'),id=document.createElement('small');item.textContent=student.name+(balanceEngineering()&&!student.dept?'（学部不明）':'');id.textContent=student.id;item.append(id);list.append(item)});card.append(head,list);grid.append(card)
+ })
+}
+async function closePresentation(){if(document.fullscreenElement===$('presentation')){try{await document.exitFullscreen()}catch{}}$('presentation').hidden=true}
+$('previewButton').addEventListener('click',async()=>{if(!groups.length)return;$('presentation').hidden=false;renderPresentation();try{await $('presentation').requestFullscreen()}catch{}renderPresentation();$('closePreview').focus()});
+$('closePreview').addEventListener('click',closePresentation);
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)$('presentation').hidden=true;else if(document.fullscreenElement===$('presentation'))renderPresentation()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('presentation').hidden)closePresentation()});
+window.addEventListener('resize',()=>{if(!$('presentation').hidden)renderPresentation()});
+$('attendanceFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const rows=csvParse(await f.text()),heads=(rows.shift()||[]).map(h=>h.trim()),idIndex=heads.indexOf('学籍番号');if(idIndex<0)throw Error('「学籍番号」列がありません');const dates=heads.filter(x=>/^\d{4}\/\d{2}\/\d{2}$/.test(x));if(!dates.length)throw Error('日付列がありません');const seen=new Set(),parsed=[];for(const row of rows){const id=(row[idIndex]||'').trim();if(!id)continue;if(seen.has(id))throw Error(`学籍番号が重複しています：${id}`);seen.add(id);parsed.push({id,name:row[heads.findIndex(h=>['学生氏名','氏名','名前'].includes(h))]||'',cells:Object.fromEntries(dates.map(d=>[d,(row[heads.indexOf(d)]||'').trim()]))})}if(!parsed.length)throw Error('学生行がありません');attendance=parsed;attendanceOverrides.clear();const dateSelect=$('dateSelect');dateSelect.replaceChildren();dates.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;dateSelect.append(o)});dateSelect.disabled=false;const lastFilled=dates.findLastIndex(d=>parsed.some(r=>r.cells[d]));date=dates[Math.max(lastFilled,0)]||dates[0];dateSelect.value=date;attendance=parsed.map(r=>({...r,status:r.cells[date]}));groups=[];renderGroups();renderAttendance()}catch(err){attendance=[];date='';groups=[];attendanceOverrides.clear();$('dateSelect').replaceChildren();$('dateSelect').disabled=true;renderGroups();renderAttendance();setStatus('attendanceStatus',`読込失敗：${err.message}`,'error')}});
+$('dateSelect').addEventListener('change',()=>{date=$('dateSelect').value;attendanceOverrides.clear();attendance=attendance.map(r=>({...r,status:r.cells[date]||''}));groups=[];renderGroups();renderAttendance()});$('attendanceMode').addEventListener('change',()=>{attendanceOverrides.clear();groups=[];renderGroups();renderAttendance()});
+$('studentForm').addEventListener('submit',e=>{e.preventDefault();const id=$('studentId').value.trim(),name=$('studentName').value.trim(),department=$('studentDept').value.trim(),old=master().find(s=>s.id===id);if(!/^\d+$/.test(id)){setStatus('masterStatus','学籍番号は数字で入力してください。','error');return}if(!name){setStatus('masterStatus','氏名を入力してください。','error');return}if(old&&!confirm(`${id} ${old.name} の情報を更新しますか？`))return;overrides[id]={id,name,dept:department};const saved=save();e.target.reset();groups=[];renderGroups();renderMaster();setStatus('masterStatus',`${old?'更新':'追加'}しました。${saved?'ブラウザに保存済み。':'ブラウザ保存に失敗しました。マスターCSVを保存してください。'}`,saved?'ok':'error')});$('clearForm').addEventListener('click',()=>$('studentForm').reset());
+$('exportMaster').addEventListener('click',()=>csvDownload([['学籍番号','名前','所属'],...master().map(s=>[s.id,s.name,s.dept])],'classroom-student-master.csv'));
+$('masterFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const rows=csvParse(await file.text()),heads=rows.shift(),idCol=heads.indexOf('学籍番号'),nameCol=heads.indexOf('名前'),deptCol=heads.indexOf('所属');if(idCol<0||nameCol<0||deptCol<0)throw Error('学籍番号・名前・所属の列が必要です');const incoming=[],seen=new Set();for(const row of rows){const id=(row[idCol]||'').trim(),name=(row[nameCol]||'').trim();if(!id&&!name)continue;if(!/^\d+$/.test(id)||!name||seen.has(id))throw Error(`学籍番号か氏名に不備、または重複があります：${id}`);seen.add(id);incoming.push({id,name,dept:(row[deptCol]||'').trim()})}if(!incoming.length)throw Error('学生データがありません');if(!confirm(`${incoming.length}人の情報をマスターへ追加・更新しますか？`))return;for(const student of incoming)overrides[student.id]=student;const saved=save();groups=[];renderGroups();renderMaster();setStatus('masterStatus',`${incoming.length}人を読み込みました。${saved?'ブラウザに保存済み。':'ブラウザ保存に失敗しました。'}`,saved?'ok':'error')}catch(err){setStatus('masterStatus',`マスター読込失敗：${err.message}`,'error')}finally{e.target.value=''}});
+$('generate').addEventListener('click',async()=>{
+ if(generating||!checkLayout()||!selected().length)return;
+ generating=true;
+ $('generate').disabled=true;
+ setStatus('generateStatus','組み分け中…');
+ try{
+  if($('diceToggle').checked&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+   const overlay=$('dice'),face=$('dieFace'),faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+   overlay.hidden=false;
+   const timer=setInterval(()=>face.textContent=faces[Math.floor(Math.random()*6)],240);
+   await new Promise(resolve=>setTimeout(resolve,2500));
+   clearInterval(timer);
+   overlay.hidden=true;
+  }
+  const people=selected(),sizes=groupPlan(people.length);
+  if(!sizes?.length){
+   setStatus('generateStatus','参加者と組み分け条件を確認してください。','error');
+   return;
+  }
+  groups=arrange(people,sizes);
+  renderGroups();
+  $('resultsPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  setStatus('generateStatus',`${people.length}人を${groups.length}組に分けました。`,'ok');
+ }catch(error){
+  setStatus('generateStatus',error.message,'error');
+ }finally{
+  generating=false;
+  checkLayout();
+ }
+});
+$('exportGroups').addEventListener('click',()=>{const {cols}=classroomSettings(),rows=[['対象日','グループ','机行','机列','机内席','学籍番号','氏名',...(balanceEngineering()?['所属','工学部']:[])]];deskLayout().forEach((entry,index)=>{if(!entry||entry.gap)return;entry.members.forEach((student,seat)=>rows.push([date||'未指定',entry.groupIndex+1,Math.floor(index/cols)+1,index%cols+1,seat+1,student.id,student.name,...(balanceEngineering()?[dept(student),engineering(student)?'はい':'いいえ']:[])]))});csvDownload(rows,`classroom-groups-${(date||'all').replaceAll('/','-')}.csv`)});
+for(const id of ['tableColumns','tableRows'])$(id).addEventListener('input',()=>{groups=[];renderGroups();checkLayout();setStatus('generateStatus','配置設定を変更しました。もう一度グループを生成してください。')});
+function updateGroupingSettings(){
+ const descriptions={
+  2:'2人組を作ります。奇数の場合は1人組が1つできます。',
+  3:'3人組を優先し、余りは2人組で調整します。1組につき1卓を使います。',
+  4:'4人組を優先します。4人組は前後2卓、3人以下の組は1卓を使います。'
+ };
+ $('groupingHelp').textContent=descriptions[preferredSize()]+(balanceEngineering()?' 所属が工学部の学生を各組に分散します。':'');
+ groups=[];
+ renderGroups();
+ renderAttendance();
+ setStatus('generateStatus','');
+}
+$('groupPreset').addEventListener('change',()=>{
+ const preset=$('groupPreset').value;
+ if(preset==='custom')return;
+ $('groupSize').value=preset==='dv'?'4':'3';
+ $('balanceMode').value=preset==='dv'?'engineering':'off';
+ updateGroupingSettings();
+});
+for(const id of ['groupSize','balanceMode'])$(id).addEventListener('change',()=>{
+ $('groupPreset').value='custom';
+ updateGroupingSettings();
+});
+renderMaster();
+updateGroupingSettings();
+})();
+</script></body></html>
