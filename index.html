@@ -86,15 +86,13 @@ function groupPlan(n){
   const sizes=[...Array((n-2*twos)/3).fill(3),...Array(twos).fill(2)];
   return fitsClassroom(sizes,room,0)?sizes:null;
  }
- // 3〜4人組で全員を配置できる範囲で、最前列を空けて4人組を増やす。
- for(const firstRow of [1,0]){
-  const pairs=room.cols*Math.floor((room.rows-firstRow)/2);
-  for(let fours=Math.min(Math.floor(n/4),pairs);fours>=0;fours--){
-   const rest=n-4*fours;
-   if(rest%3!==0)continue;
-   const sizes=[...Array(fours).fill(4),...Array(rest/3).fill(3)];
-   if(fitsClassroom(sizes,room,firstRow))return sizes;
-  }
+ // 4人組を最大化し、決まった組み分けに対して最前列を空けられるか判定する。
+ const pairs=room.cols*Math.floor(room.rows/2);
+ for(let fours=Math.min(Math.floor(n/4),pairs);fours>=0;fours--){
+  const rest=n-4*fours;
+  if(rest%3!==0)continue;
+  const sizes=[...Array(fours).fill(4),...Array(rest/3).fill(3)];
+  if(fitsClassroom(sizes,room,0))return sizes;
  }
  return null
 }
@@ -340,7 +338,7 @@ function updateGroupingSettings(){
  const descriptions={
   2:'2人組を作ります。奇数の場合は1人組が1つできます。',
   3:'3人組を優先し、余りは2人組で調整します。1組につき1卓を使います。',
-  4:'3〜4人組に分けます。4人組は前後2卓、3人組は1卓を使います。'
+  4:'4人組をできるだけ多く作り、残りを3人組にします。4人組は前後2卓、3人組は1卓を使います。'
  };
  $('groupingHelp').textContent=descriptions[preferredSize()]+(balanceEngineering()?' 所属が工学部の学生を各組に分散します。':'');
  groups=[];
