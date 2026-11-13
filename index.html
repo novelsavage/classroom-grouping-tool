@@ -24,7 +24,7 @@
 <div class="field"><label for="balanceMode">所属による分散</label><select id="balanceMode"><option value="off">なし</option><option value="engineering">工学部を分散</option></select></div><div class="field"><span class="label">予定グループ数</span><strong id="plannedGroups">—</strong></div><div class="field wide"><label for="attendanceMode">対象者</label><select id="attendanceMode"><option value="present">出・遅・早のみ</option><option value="nonabsent">出・遅・早・公欠</option><option value="all">マスター全員</option></select></div></div><div class="row" style="margin-top:.8rem"><div class="field"><label for="tableColumns">机の横の列数</label><input id="tableColumns" type="number" min="1" max="10" step="1" value="6"></div><div class="field"><label for="tableRows">机の前後の行数</label><input id="tableRows" type="number" min="1" max="20" step="1" value="6"></div></div><p id="layoutStatus" class="status" role="status"></p><label class="checkline"><input id="diceToggle" type="checkbox" checked> 約2.5秒のダイス演出を表示</label><p class="subtle"><span id="groupingHelp"></span></p></section>
 </div>
 <section class="panel"><div class="topline"><h2>03　学生マスター <span id="masterCount"></span></h2><button id="exportMaster" class="secondary">マスターCSVを保存</button></div><p id="masterHelp" class="subtle"></p><div class="field" style="margin-bottom:.8rem"><label for="masterFile">保存したマスターCSVを読み込む</label><input id="masterFile" type="file" accept=".csv,text/csv"></div><form id="studentForm" class="row"><div class="field"><label for="studentId">学籍番号</label><input id="studentId" required inputmode="numeric" autocomplete="off"></div><div class="field"><label for="studentName">氏名</label><input id="studentName" required autocomplete="off"></div><div class="field wide"><label for="studentDept">所属（任意）</label><input id="studentDept" placeholder="不明なら空欄で登録できます"></div><button type="submit">追加・更新</button><button id="clearForm" type="button" class="secondary">入力を消す</button></form><div id="masterStatus" class="status" role="status"></div><details><summary>学生一覧・修正</summary><div class="roster"><table><thead><tr><th>学籍番号</th><th>氏名</th><th>所属</th><th>操作</th></tr></thead><tbody id="masterRows"></tbody></table></div></details></section>
-<section class="panel" id="generatePanel"><h2>04　実行・保存</h2><p class="subtle">対象者を確認してから生成してください。教室の前方から順に配置します。</p><div class="actions"><button id="generate" disabled>グループを生成</button><button id="exportGroups" class="secondary" disabled>結果CSVを保存</button></div><div id="generateStatus" class="status" role="status"></div></section><section class="panel" id="resultsPanel"><div class="topline"><h2>05　組み分け結果</h2><div class="row"><span id="resultSummary" class="subtle">まだ生成されていません</span><button id="saveImage" type="button" class="secondary" disabled>スクショを保存（PNG）</button><button id="previewButton" class="secondary" disabled>全画面プレビュー</button></div></div><p id="imageStatus" class="status" role="status"></p><div id="resultsFront" class="classroomFront">黒板・スクリーン（教室の前方）</div><div class="classroomScroll"><div id="groups" class="groups"></div></div></section>
+<section class="panel" id="generatePanel"><h2>04　実行・保存</h2><p class="subtle">最前列を空けて2行目から配置します。机に余裕があれば、前後に並ぶ組の間に空き行を設けます。</p><div class="actions"><button id="generate" disabled>グループを生成</button><button id="exportGroups" class="secondary" disabled>結果CSVを保存</button></div><div id="generateStatus" class="status" role="status"></div></section><section class="panel" id="resultsPanel"><div class="topline"><h2>05　組み分け結果</h2><div class="row"><span id="resultSummary" class="subtle">まだ生成されていません</span><button id="saveImage" type="button" class="secondary" disabled>スクショを保存（PNG）</button><button id="previewButton" class="secondary" disabled>全画面プレビュー</button></div></div><p id="imageStatus" class="status" role="status"></p><div id="resultsFront" class="classroomFront">黒板・スクリーン（教室の前方）</div><div class="classroomScroll"><div id="groups" class="groups"></div></div></section>
 </main><div id="dice" class="dice" hidden aria-live="off"><div id="dieFace" class="face">⚄</div><p>グループを組み分けています…</p></div>
 <div id="presentation" class="presentation" hidden role="dialog" aria-label="グループ分け全画面プレビュー"><div class="presentationHead"><strong>授業内グループ分け</strong><span id="presentationSummary"></span><button id="closePreview" type="button">閉じる ×</button></div><div class="classroomFront">黒板・スクリーン（教室の前方）</div><div id="presentationGrid" class="presentationGrid"></div></div>
 <script id="seed" type="application/json">[]</script>
@@ -62,7 +62,8 @@ function renderMaster(){const m=master();$('masterCount').textContent=`（${m.le
 function classroomSettings(){
  const cols=Number($('tableColumns').value),rows=Number($('tableRows').value);
  if(!Number.isInteger(cols)||cols<1||cols>10||!Number.isInteger(rows)||rows<1||rows>20)throw Error('横は1〜10列、前後は1〜20行の整数で設定してください。');
- return {cols,rows,desks:cols*rows,pairs:cols*Math.floor(rows/2)}
+ const usableRows=rows-1;
+ return {cols,rows,usableRows,desks:cols*usableRows,pairs:cols*Math.floor(usableRows/2)}
 }
 const preferredSize=()=>Number($('groupSize').value);
 const balanceEngineering=()=>$('balanceMode').value==='engineering';
@@ -70,6 +71,7 @@ const balanceEngineering=()=>$('balanceMode').value==='engineering';
 function groupPlan(n){
  if(!n)return [];
  const {desks,pairs}=classroomSettings();
+ if(n>3*desks)return null;
  const preferred=preferredSize();
  if(preferred===2){
   if(Math.ceil(n/2)>desks)return null;
@@ -99,8 +101,8 @@ function checkLayout(){
   const used=plan?plan.reduce((sum,size)=>sum+(size===4?2:1),0):0;
   const breakdown=plan?[4,3,2,1].map(size=>[size,plan.filter(x=>x===size).length]).filter(([,count])=>count).map(([size,count])=>`${size}人組 ${count}`).join('・'):'';
   const summary=!enough
-   ? (n===1&&preferredSize()===3?'組み分けには2人以上必要です。':`${cols}列 × ${rows}行＝${desks}卓では${n}人を配置できません。机の列数か行数を増やしてください。`)
-   : `${cols}列 × ${rows}行＝${desks}卓。${n?`${n}人を${breakdown}に分け、${used}卓を使用します。`:''}`;
+   ? (n===1&&preferredSize()===3?'組み分けには2人以上必要です。':`最前列を空けると、使える机${desks}卓では${n}人を配置できません。机の列数か行数を増やしてください。`)
+   : `${cols}列 × ${rows}行。最前列を除く${desks}卓に配置できます。${n?`${n}人を${breakdown}に分け、${used}卓を使用します。`:''}`;
   setStatus('layoutStatus',summary,enough?'':'error');
   return enough
  }catch(err){$('generate').disabled=true;setStatus('layoutStatus',err.message,'error');return false}
@@ -149,19 +151,40 @@ function arrange(people,sizes){
  place(eng);place(other);return bins
 }
 function deskLayout(){
- const {cols,desks,pairs}=classroomSettings(),layout=Array(desks).fill(null);
+ const {cols,rows,usableRows,desks,pairs}=classroomSettings(),layout=Array(cols*rows).fill(null);
  let pairIndex=0;
  groups.forEach((group,groupIndex)=>{
   if(group.length!==4)return;
   if(pairIndex>=pairs)throw Error('4人組を置く前後の机が足りません');
-  const front=Math.floor(pairIndex/cols)*2*cols+pairIndex%cols;
+  const front=(1+Math.floor(pairIndex/cols)*2)*cols+pairIndex%cols;
   layout[front]={groupIndex,part:'前卓',members:group.slice(0,2)};
   layout[front+cols]={groupIndex,part:'後卓',members:group.slice(2)};
   pairIndex++;
  });
- let deskIndex=0;
- groups.forEach((group,groupIndex)=>{if(group.length===4)return;while(deskIndex<desks&&layout[deskIndex])deskIndex++;if(deskIndex===desks)throw Error('机が足りません');layout[deskIndex]={groupIndex,part:'1卓',members:group};deskIndex++});
- return layout
+ let deskIndex=cols;
+ groups.forEach((group,groupIndex)=>{
+  if(group.length===4)return;
+  while(deskIndex<layout.length&&layout[deskIndex])deskIndex++;
+  if(deskIndex===layout.length)throw Error('最前列を空けると机が足りません');
+  layout[deskIndex++]={groupIndex,part:'1卓',members:group};
+ });
+
+ // 4人組の前卓と後卓は隣接させ、余った行はまとまりの間に入れる。
+ const pairedRows=2*Math.ceil(pairIndex/cols);
+ const lastRow=Math.floor(layout.findLastIndex(Boolean)/cols);
+ let spareRows=usableRows-lastRow;
+ if(spareRows<=0)return layout;
+ const spaced=Array(cols*rows).fill(null);
+ let targetRow=1;
+ for(let row=1;row<=lastRow;row++){
+  for(let col=0;col<cols;col++)spaced[targetRow*cols+col]=layout[row*cols+col];
+  targetRow++;
+  if(spareRows>0&&row<lastRow&&(row>=pairedRows||row%2===0)){
+   targetRow++;
+   spareRows--;
+  }
+ }
+ return spaced
 }
 function canMove(from,to){
  if(from===to)return true;
