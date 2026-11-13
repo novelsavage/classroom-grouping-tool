@@ -8,7 +8,7 @@
 .masterOnly{border-top:1px solid var(--line);margin-top:.7rem;padding-top:.7rem}.masterOnly h3{font-size:.9rem;margin:.1rem 0 .4rem}.masterOnlyList{max-height:180px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.15rem .6rem}.masterOnlyList label{display:flex;align-items:center;gap:.35rem;padding:.25rem;font-size:.85rem}.masterOnlyList small{font-family:ui-monospace,monospace}.presentation{position:fixed;inset:0;z-index:20;background:#f5f4ef;color:var(--ink);padding:clamp(8px,1.2vw,22px);display:flex;flex-direction:column;gap:10px}.presentation[hidden]{display:none}.presentationHead{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px}.presentationHead strong{font-size:clamp(13px,1.2vw,22px);letter-spacing:.08em}.presentationGrid{flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--preview-cols,4),minmax(0,1fr));grid-template-rows:repeat(var(--preview-rows,3),minmax(0,1fr));gap:clamp(4px,.55vw,12px)}.presentationGroup{min-width:0;min-height:0;border:2px solid #8da8a5;background:white;display:flex;flex-direction:column}.presentationGroup h3{margin:0;padding:.25em .45em;background:#dfe9e6;font-size:clamp(11px,1.2vw,20px);display:flex;justify-content:space-between}.presentationGroup ol{list-style:none;margin:0;padding:.2em .45em;display:flex;flex-direction:column;justify-content:space-evenly;flex:1;min-height:0}.presentationGroup li{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:clamp(11px,1.35vw,23px);font-weight:650;line-height:1.18}.presentationGroup li small{font-size:.65em;font-weight:400;margin-left:.3em}@media(max-width:760px){.presentationGrid{overflow:auto;grid-template-rows:none;grid-auto-rows:minmax(120px,1fr)}.presentationGroup li{font-size:12px}.presentationHead{flex-wrap:wrap}}
 .classroomFront{text-align:center;background:#12333a;color:white;padding:.45rem;margin:.4rem 0 .8rem;font-weight:700}.deskPart{font-size:.72em;font-weight:500;margin-left:.3em}.group .deskNote{margin:.2rem .7rem;color:var(--muted);font-size:.78rem}.presentationGroup .deskNote{margin:.15rem .4rem;color:var(--muted);font-size:.75em}
 .classroomScroll{overflow:auto}.groups{grid-template-columns:repeat(var(--classroom-cols,6),minmax(180px,1fr));gap:1rem}.group.empty,.presentationGroup.empty{background:#edf0eb;border-style:dashed;color:var(--muted)}.empty p{text-align:center;margin:auto;padding:1rem}.presentationGrid{overflow:auto;grid-template-rows:repeat(var(--preview-rows,5),minmax(95px,1fr))}.presentationGroup li{white-space:normal;overflow:visible;font-size:clamp(11px,1.15vw,21px)}.presentationGroup ol{gap:.15em}.presentationGroup{overflow:auto}
-.group.gapRow,.presentationGroup.gapRow{grid-column:1/-1;min-height:95px;border:0;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.85rem;letter-spacing:.08em}
+#imageStatus:empty{display:none}
 .group[data-group],.presentationGroup[data-group]{border-color:hsl(var(--group-hue) 48% 40%);border-left-width:6px;background:hsl(var(--group-hue) 60% 97%)}
 .group[data-group] h3,.presentationGroup[data-group] h3{background:hsl(var(--group-hue) 65% 84%);color:var(--ink)}
 @media(max-width:760px){.presentationGrid{grid-template-rows:repeat(var(--preview-rows,4),minmax(120px,1fr));grid-auto-rows:auto}}
@@ -24,7 +24,7 @@
 <div class="field"><label for="balanceMode">所属による分散</label><select id="balanceMode"><option value="off">なし</option><option value="engineering">工学部を分散</option></select></div><div class="field"><span class="label">予定グループ数</span><strong id="plannedGroups">—</strong></div><div class="field wide"><label for="attendanceMode">対象者</label><select id="attendanceMode"><option value="present">出・遅・早のみ</option><option value="nonabsent">出・遅・早・公欠</option><option value="all">マスター全員</option></select></div></div><div class="row" style="margin-top:.8rem"><div class="field"><label for="tableColumns">机の横の列数</label><input id="tableColumns" type="number" min="1" max="10" step="1" value="6"></div><div class="field"><label for="tableRows">机の前後の行数</label><input id="tableRows" type="number" min="1" max="20" step="1" value="6"></div></div><p id="layoutStatus" class="status" role="status"></p><label class="checkline"><input id="diceToggle" type="checkbox" checked> 約2.5秒のダイス演出を表示</label><p class="subtle"><span id="groupingHelp"></span></p></section>
 </div>
 <section class="panel"><div class="topline"><h2>03　学生マスター <span id="masterCount"></span></h2><button id="exportMaster" class="secondary">マスターCSVを保存</button></div><p id="masterHelp" class="subtle"></p><div class="field" style="margin-bottom:.8rem"><label for="masterFile">保存したマスターCSVを読み込む</label><input id="masterFile" type="file" accept=".csv,text/csv"></div><form id="studentForm" class="row"><div class="field"><label for="studentId">学籍番号</label><input id="studentId" required inputmode="numeric" autocomplete="off"></div><div class="field"><label for="studentName">氏名</label><input id="studentName" required autocomplete="off"></div><div class="field wide"><label for="studentDept">所属（任意）</label><input id="studentDept" placeholder="不明なら空欄で登録できます"></div><button type="submit">追加・更新</button><button id="clearForm" type="button" class="secondary">入力を消す</button></form><div id="masterStatus" class="status" role="status"></div><details><summary>学生一覧・修正</summary><div class="roster"><table><thead><tr><th>学籍番号</th><th>氏名</th><th>所属</th><th>操作</th></tr></thead><tbody id="masterRows"></tbody></table></div></details></section>
-<section class="panel" id="generatePanel"><h2>04　実行・保存</h2><p class="subtle">対象者を確認してから生成してください。教室の前方から順に配置します。</p><div class="actions"><button id="generate" disabled>グループを生成</button><button id="exportGroups" class="secondary" disabled>結果CSVを保存</button></div><div id="generateStatus" class="status" role="status"></div></section><section class="panel" id="resultsPanel"><div class="topline"><h2>05　組み分け結果</h2><div class="row"><span id="resultSummary" class="subtle">まだ生成されていません</span><button id="previewButton" class="secondary" disabled>全画面プレビュー</button></div></div><div class="classroomFront">黒板・スクリーン（教室の前方）</div><div class="classroomScroll"><div id="groups" class="groups"></div></div></section>
+<section class="panel" id="generatePanel"><h2>04　実行・保存</h2><p class="subtle">対象者を確認してから生成してください。教室の前方から順に配置します。</p><div class="actions"><button id="generate" disabled>グループを生成</button><button id="exportGroups" class="secondary" disabled>結果CSVを保存</button></div><div id="generateStatus" class="status" role="status"></div></section><section class="panel" id="resultsPanel"><div class="topline"><h2>05　組み分け結果</h2><div class="row"><span id="resultSummary" class="subtle">まだ生成されていません</span><button id="saveImage" type="button" class="secondary" disabled>スクショを保存（PNG）</button><button id="previewButton" class="secondary" disabled>全画面プレビュー</button></div></div><p id="imageStatus" class="status" role="status"></p><div id="resultsFront" class="classroomFront">黒板・スクリーン（教室の前方）</div><div class="classroomScroll"><div id="groups" class="groups"></div></div></section>
 </main><div id="dice" class="dice" hidden aria-live="off"><div id="dieFace" class="face">⚄</div><p>グループを組み分けています…</p></div>
 <div id="presentation" class="presentation" hidden role="dialog" aria-label="グループ分け全画面プレビュー"><div class="presentationHead"><strong>授業内グループ分け</strong><span id="presentationSummary"></span><button id="closePreview" type="button">閉じる ×</button></div><div class="classroomFront">黒板・スクリーン（教室の前方）</div><div id="presentationGrid" class="presentationGrid"></div></div>
 <script id="seed" type="application/json">[]</script>
@@ -51,7 +51,12 @@ function saveMasterChanges(){
 }
 const dept=s=>s.dept||'所属不明',engineering=s=>/^工学部(?:\s|$)/.test(dept(s));
 function csvParse(t){t=t.replace(/^\uFEFF/,'');let rows=[],row=[],field='',quoted=false;for(let i=0;i<t.length;i++){let c=t[i];if(quoted){if(c==='"'&&t[i+1]==='"'){field+='"';i++}else if(c==='"')quoted=false;else field+=c}else if(c==='"'&&field==='')quoted=true;else if(c===','){row.push(field);field=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(field);if(row.some(x=>x!==''))rows.push(row);row=[];field=''}else field+=c}if(quoted)throw Error('CSVの引用符が閉じていません');row.push(field);if(row.some(x=>x!==''))rows.push(row);return rows}
-function csvDownload(rows,name){const body=rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const blob=new Blob(['\uFEFF',body],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function downloadBlob(blob,name){
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download=name;link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+function csvDownload(rows,name){const body=rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');downloadBlob(new Blob(['\uFEFF',body],{type:'text/csv;charset=utf-8'}),name)}
 const setStatus=(id,msg,kind='')=>{$(id).textContent=msg;$(id).className='status '+kind};
 function renderMaster(){const m=master();$('masterCount').textContent=`（${m.length}人）`;const body=$('masterRows');body.replaceChildren();for(const s of m){const tr=document.createElement('tr');for(const v of [s.id,s.name,dept(s)]){const td=document.createElement('td');td.textContent=v;tr.append(td)}const td=document.createElement('td'),b=document.createElement('button');b.type='button';b.className='secondary';b.textContent='修正';b.addEventListener('click',()=>{$('studentId').value=s.id;$('studentName').value=s.name;$('studentDept').value=s.dept||'';$('studentName').focus()});td.append(b);tr.append(td);body.append(tr)}renderAttendance()}
 function classroomSettings(){
@@ -144,26 +149,16 @@ function arrange(people,sizes){
  place(eng);place(other);return bins
 }
 function deskLayout(){
- const {cols,rows,desks}=classroomSettings(),layout=Array(desks).fill(null),pairs=[];
- const fours=groups.filter(group=>group.length===4).length,singles=groups.length-fours,blocks=Math.ceil(fours/cols);
- let placement=null;
- // 前後2卓のブロック間に、全員が収まる範囲で机1行分の間隔を入れる。
- for(let mask=0;mask<2**Math.max(0,blocks-1);mask++){
-  const starts=blocks?[0]:[],gaps=[];
-  for(let block=1;block<blocks;block++){
-   const gap=(mask>>(block-1))&1,next=starts[block-1]+2+gap;
-   if(gap)gaps.push(next-1);
-   starts.push(next)
-  }
-  if(blocks&&starts.at(-1)+1>=rows)continue;
-  if(2*fours+singles+cols*gaps.length>desks)continue;
-  if(!placement||gaps.length>placement.gaps.length)placement={starts,gaps}
- }
- if(!placement)throw Error('机が足りません');
- for(const row of placement.gaps)for(let col=0;col<cols;col++)layout[row*cols+col]={gap:true};
- for(const row of placement.starts)for(let col=0;col<cols;col++)pairs.push([row*cols+col,(row+1)*cols+col]);
+ const {cols,desks,pairs}=classroomSettings(),layout=Array(desks).fill(null);
  let pairIndex=0;
- groups.forEach((group,groupIndex)=>{if(group.length!==4)return;const pair=pairs[pairIndex++];if(!pair)throw Error('4人組を置く前後の机が足りません');layout[pair[0]]={groupIndex,part:'前卓',members:group.slice(0,2)};layout[pair[1]]={groupIndex,part:'後卓',members:group.slice(2)}});
+ groups.forEach((group,groupIndex)=>{
+  if(group.length!==4)return;
+  if(pairIndex>=pairs)throw Error('4人組を置く前後の机が足りません');
+  const front=Math.floor(pairIndex/cols)*2*cols+pairIndex%cols;
+  layout[front]={groupIndex,part:'前卓',members:group.slice(0,2)};
+  layout[front+cols]={groupIndex,part:'後卓',members:group.slice(2)};
+  pairIndex++;
+ });
  let deskIndex=0;
  groups.forEach((group,groupIndex)=>{if(group.length===4)return;while(deskIndex<desks&&layout[deskIndex])deskIndex++;if(deskIndex===desks)throw Error('机が足りません');layout[deskIndex]={groupIndex,part:'1卓',members:group};deskIndex++});
  return layout
@@ -176,17 +171,19 @@ function canMove(from,to){
  const {desks,pairs}=classroomSettings(),sizes=groups.map(group=>group.length);sizes[from]--;sizes[to]++;
  return sizes.filter(size=>size===4).length<=pairs&&sizes.reduce((sum,size)=>sum+(size===4?2:1),0)<=desks
 }
-function colorGroup(element,index){element.dataset.group=String(index+1);element.style.setProperty('--group-hue',Math.round((210+index*137.508)%360))}
+const groupHue=index=>Math.round((210+index*137.508)%360);
+const deskTitle=({groupIndex,part})=>`GROUP ${String(groupIndex+1).padStart(2,'0')} / ${part}`;
+function colorGroup(element,index){element.dataset.group=String(index+1);element.style.setProperty('--group-hue',groupHue(index))}
 function renderGroups(){
- const box=$('groups');box.replaceChildren();box.style.setProperty('--classroom-cols',$('tableColumns').value);$('exportGroups').disabled=!groups.length;$('previewButton').disabled=!groups.length;
+ const box=$('groups');box.replaceChildren();box.style.setProperty('--classroom-cols',$('tableColumns').value);$('exportGroups').disabled=!groups.length;$('previewButton').disabled=!groups.length;$('saveImage').disabled=!groups.length;
+ setStatus('imageStatus','');
  if(!groups.length){$('presentation').hidden=true;$('resultSummary').textContent='まだ生成されていません';return}
  const total=groups.reduce((sum,g)=>sum+g.length,0);$('resultSummary').textContent=`${groups.length}組・${total}人`;
- const {cols}=classroomSettings();deskLayout().forEach((entry,deskIndex)=>{
-  if(entry?.gap){if(deskIndex%cols===0){const gap=document.createElement('div');gap.className='group gapRow';gap.textContent='前後の間隔（机1行分）';box.append(gap)}return}
+ deskLayout().forEach((entry,deskIndex)=>{
   const sec=document.createElement('section');sec.className='group';
   if(!entry){sec.classList.add('empty');const h=document.createElement('h3');h.textContent=`机 ${deskIndex+1}`;const p=document.createElement('p');p.textContent='空き';sec.append(h,p);box.append(sec);return}
-   const {groupIndex,part,members}=entry,group=groups[groupIndex],h=document.createElement('h3'),title=document.createElement('span'),meta=document.createElement('span');colorGroup(sec,groupIndex);
-  title.textContent=`GROUP ${String(groupIndex+1).padStart(2,'0')} / ${part}`;meta.textContent=balanceEngineering()?`工学部 ${group.filter(engineering).length}/${group.length}`:`${group.length}人組`;h.append(title,meta);sec.append(h);
+   const {groupIndex,members}=entry,group=groups[groupIndex],h=document.createElement('h3'),title=document.createElement('span'),meta=document.createElement('span');colorGroup(sec,groupIndex);
+  title.textContent=deskTitle(entry);meta.textContent=balanceEngineering()?`工学部 ${group.filter(engineering).length}/${group.length}`:`${group.length}人組`;h.append(title,meta);sec.append(h);
   const ul=document.createElement('ul');members.forEach(student=>{const li=document.createElement('li'),p=document.createElement('div');p.className='person';const name=document.createElement('span');name.textContent=student.name+'　';p.append(name);if(balanceEngineering()&&engineering(student)){const tag=document.createElement('span');tag.className='tag';tag.textContent='工学部';p.append(tag)}else if(balanceEngineering()&&!student.dept){const tag=document.createElement('span');tag.className='tag';tag.textContent='学部不明';p.append(tag)}const detail=document.createElement('small');detail.textContent=`${student.id}${balanceEngineering()?'｜'+dept(student):''}`;p.append(detail);const sel=document.createElement('select');sel.setAttribute('aria-label',`${student.name}の移動先`);groups.forEach((_,j)=>{const option=document.createElement('option');option.value=j;option.textContent=`組 ${j+1}`;option.selected=j===groupIndex;option.disabled=!canMove(groupIndex,j);sel.append(option)});sel.addEventListener('change',()=>{const target=Number(sel.value);if(!canMove(groupIndex,target))return;groups[groupIndex]=groups[groupIndex].filter(x=>x.id!==student.id);groups[target].push(student);renderGroups()});li.append(p,sel);ul.append(li)});sec.append(ul);box.append(sec)
  });if(!$('presentation').hidden)renderPresentation()
 }
@@ -194,13 +191,74 @@ function renderPresentation(){
  const grid=$('presentationGrid');grid.replaceChildren();if(!groups.length)return;
  const {cols,rows}=classroomSettings();grid.style.setProperty('--preview-cols',cols);grid.style.setProperty('--preview-rows',rows);$('presentationSummary').textContent=`${groups.length}組 / ${groups.reduce((sum,g)=>sum+g.length,0)}人`;
  deskLayout().forEach((entry,deskIndex)=>{
-  if(entry?.gap){if(deskIndex%cols===0){const gap=document.createElement('div');gap.className='presentationGroup gapRow';gap.textContent='前後の間隔（机1行分）';grid.append(gap)}return}
   const card=document.createElement('section');card.className='presentationGroup';const head=document.createElement('h3');
   if(!entry){card.classList.add('empty');head.textContent=`机 ${deskIndex+1}`;const note=document.createElement('p');note.textContent='空き';card.append(head,note);grid.append(card);return}
-   colorGroup(card,entry.groupIndex);const title=document.createElement('span'),meta=document.createElement('span');title.textContent=`GROUP ${String(entry.groupIndex+1).padStart(2,'0')} / ${entry.part}`;meta.textContent=`${groups[entry.groupIndex].length}人組`;head.append(title,meta);
+   colorGroup(card,entry.groupIndex);const title=document.createElement('span'),meta=document.createElement('span');title.textContent=deskTitle(entry);meta.textContent=`${groups[entry.groupIndex].length}人組`;head.append(title,meta);
   const list=document.createElement('ol');entry.members.forEach(student=>{const item=document.createElement('li'),id=document.createElement('small');item.textContent=student.name+(balanceEngineering()&&!student.dept?'（学部不明）':'');id.textContent=student.id;item.append(id);list.append(item)});card.append(head,list);grid.append(card)
  })
 }
+function renderResultImage(){
+ const {cols,rows}=classroomSettings();
+ const layout=deskLayout(),canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+ if(!ctx)throw Error('画像を作成できませんでした。');
+ const padding=20,gap=12,deskWidth=248,deskHeight=154,deskTop=108;
+ const width=cols*(deskWidth+gap)-gap+padding*2;
+ const height=deskTop+rows*(deskHeight+gap)-gap+padding;
+ canvas.width=width;
+ canvas.height=height;
+ ctx.textBaseline='middle';
+ const rect=(color,x,y,w,h)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h)};
+ function drawText(text,x,y,maxWidth,{size=15,weight=400,color='#172329',align='left'}={}){
+  ctx.font=`${weight} ${size}px system-ui, "Yu Gothic", sans-serif`;
+  ctx.fillStyle=color;
+  ctx.textAlign=align;
+  ctx.fillText(text,x,y,maxWidth);
+ }
+
+ rect('#f5f4ef',0,0,width,height);
+ drawText('組み分け結果',padding,31,140,{size:20,weight:700});
+ drawText($('resultSummary').textContent,width-padding,31,width-180,{align:'right'});
+ rect('#12333a',padding,54,width-padding*2,36);
+ drawText($('resultsFront').textContent,width/2,72,width-padding*2-16,{weight:700,color:'#fff',align:'center'});
+
+ layout.forEach((entry,index)=>{
+  const x=padding+(index%cols)*(deskWidth+gap),y=deskTop+Math.floor(index/cols)*(deskHeight+gap);
+  if(!entry){
+   rect('#bcc8c7',x,y,deskWidth,deskHeight);
+   rect('#edf0eb',x+1,y+1,deskWidth-2,deskHeight-2);
+   drawText(`机 ${index+1}`,x+12,y+16,deskWidth-24,{weight:700});
+   drawText('空き',x+deskWidth/2,y+deskHeight/2,deskWidth-24,{color:'#5b686b',align:'center'});
+   return;
+  }
+  const hue=groupHue(entry.groupIndex);
+  rect(`hsl(${hue} 48% 40%)`,x,y,deskWidth,deskHeight);
+  rect(`hsl(${hue} 60% 97%)`,x+6,y+1,deskWidth-7,deskHeight-2);
+  rect(`hsl(${hue} 65% 84%)`,x+6,y+1,deskWidth-7,32);
+  drawText(deskTitle(entry),x+14,y+17,deskWidth-100,{weight:700});
+  drawText(`${groups[entry.groupIndex].length}人組`,x+deskWidth-10,y+17,70,{align:'right'});
+  entry.members.forEach((student,seat)=>{
+   const top=y+34+seat*39;
+   rect('#e2e7e5',x+6,top,deskWidth-7,1);
+   drawText(student.name,x+14,top+12,deskWidth-26,{size:16,weight:650});
+   const detail=balanceEngineering()?`${student.id}｜${dept(student)}`:student.id;
+   drawText(detail,x+14,top+29,deskWidth-26,{size:12,color:'#5b686b'});
+  });
+ });
+ return canvas;
+}
+$('saveImage').addEventListener('click',async()=>{
+ if(!groups.length)return;
+ const filename=`classroom-groups-${(date||'all').replaceAll('/','-')}.png`;
+ setStatus('imageStatus','');
+ try{
+  const canvas=renderResultImage();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('画像を作成できませんでした。');
+  downloadBlob(blob,filename);
+ }catch{
+  setStatus('imageStatus','画像を保存できませんでした。','error');
+ }
+});
 async function closePresentation(){if(document.fullscreenElement===$('presentation')){try{await document.exitFullscreen()}catch{}}$('presentation').hidden=true}
 $('previewButton').addEventListener('click',async()=>{if(!groups.length)return;$('presentation').hidden=false;renderPresentation();try{await $('presentation').requestFullscreen()}catch{}renderPresentation();$('closePreview').focus()});
 $('closePreview').addEventListener('click',closePresentation);
@@ -242,7 +300,7 @@ $('generate').addEventListener('click',async()=>{
   checkLayout();
  }
 });
-$('exportGroups').addEventListener('click',()=>{const {cols}=classroomSettings(),rows=[['対象日','グループ','机行','机列','机内席','学籍番号','氏名',...(balanceEngineering()?['所属','工学部']:[])]];deskLayout().forEach((entry,index)=>{if(!entry||entry.gap)return;entry.members.forEach((student,seat)=>rows.push([date||'未指定',entry.groupIndex+1,Math.floor(index/cols)+1,index%cols+1,seat+1,student.id,student.name,...(balanceEngineering()?[dept(student),engineering(student)?'はい':'いいえ']:[])]))});csvDownload(rows,`classroom-groups-${(date||'all').replaceAll('/','-')}.csv`)});
+$('exportGroups').addEventListener('click',()=>{const {cols}=classroomSettings(),rows=[['対象日','グループ','机行','机列','机内席','学籍番号','氏名',...(balanceEngineering()?['所属','工学部']:[])]];deskLayout().forEach((entry,index)=>{if(!entry)return;entry.members.forEach((student,seat)=>rows.push([date||'未指定',entry.groupIndex+1,Math.floor(index/cols)+1,index%cols+1,seat+1,student.id,student.name,...(balanceEngineering()?[dept(student),engineering(student)?'はい':'いいえ']:[])]))});csvDownload(rows,`classroom-groups-${(date||'all').replaceAll('/','-')}.csv`)});
 for(const id of ['tableColumns','tableRows'])$(id).addEventListener('input',()=>{groups=[];renderGroups();checkLayout();setStatus('generateStatus','配置設定を変更しました。もう一度グループを生成してください。')});
 function updateGroupingSettings(){
  const descriptions={
